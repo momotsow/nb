@@ -1,0 +1,159 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "2. Strict TypeScript and scripts": [
+      {
+        "executionId": "78fd75db-6f98-4400-978b-962213fc7085",
+        "chatSessionId": "sess_726b455e-b77a-4f25-bff1-16410f5521e5",
+        "timestamp": 1795015949324
+      },
+      {
+        "executionId": "78fd75db-6f98-4400-978b-962213fc7085",
+        "chatSessionId": "sess_726b455e-b77a-4f25-bff1-16410f5521e5",
+        "timestamp": 1795016202622
+      }
+    ],
+    "4. Environment module": [
+      {
+        "executionId": "ce78c79a-6ab4-4d76-b3b1-d16266995b62",
+        "chatSessionId": "sess_88dee4c1-32f2-4d81-8f09-0295241292bd",
+        "timestamp": 1795016238752
+      },
+      {
+        "executionId": "ce78c79a-6ab4-4d76-b3b1-d16266995b62",
+        "chatSessionId": "sess_88dee4c1-32f2-4d81-8f09-0295241292bd",
+        "timestamp": 1795016327487
+      }
+    ],
+    "6. Tokens, fonts and theme": [
+      {
+        "executionId": "611291c0-5da1-4337-a6bd-96a1d4ad46cc",
+        "chatSessionId": "sess_5cb099cf-652c-4ae2-ab31-0ff69a354381",
+        "timestamp": 1795016379080
+      },
+      {
+        "executionId": "611291c0-5da1-4337-a6bd-96a1d4ad46cc",
+        "chatSessionId": "sess_5cb099cf-652c-4ae2-ab31-0ff69a354381",
+        "timestamp": 1795016553991
+      }
+    ],
+    "7. UI primitives and state components": [
+      {
+        "executionId": "0d97d2c6-32a4-4bf0-af2b-59fb66838dbc",
+        "chatSessionId": "sess_52544a9f-db1f-4425-8b2d-901c95d3ed83",
+        "timestamp": 1795016581398
+      },
+      {
+        "executionId": "0d97d2c6-32a4-4bf0-af2b-59fb66838dbc",
+        "chatSessionId": "sess_52544a9f-db1f-4425-8b2d-901c95d3ed83",
+        "timestamp": 1795017112916
+      }
+    ],
+    "8. Storybook and a11y addon": [
+      {
+        "executionId": "614f9fcc-de9b-49fd-9462-d0299a86d125",
+        "chatSessionId": "sess_3155f581-929c-468c-96b1-0b844201ae54",
+        "timestamp": 1795017210710
+      },
+      {
+        "executionId": "614f9fcc-de9b-49fd-9462-d0299a86d125",
+        "chatSessionId": "sess_3155f581-929c-468c-96b1-0b844201ae54",
+        "timestamp": 1795017655171
+      }
+    ],
+    "9. Analytics allow-list boundary": [
+      {
+        "executionId": "db95f361-9f4e-48a0-89a5-39c9db2a03b5",
+        "chatSessionId": "sess_7f17079e-9d1f-4399-8a97-13c837c68abc",
+        "timestamp": 1795017716058
+      },
+      {
+        "executionId": "db95f361-9f4e-48a0-89a5-39c9db2a03b5",
+        "chatSessionId": "sess_7f17079e-9d1f-4399-8a97-13c837c68abc",
+        "timestamp": 1795017802121
+      }
+    ],
+    "10. AuthService, MediaProvider, ErrorReporter": [
+      {
+        "executionId": "acabf489-2622-4e3b-947b-8b3dc356fa8b",
+        "chatSessionId": "sess_f968a369-9ddd-47d6-afe1-3768e6905d10",
+        "timestamp": 1795019794723
+      },
+      {
+        "executionId": "acabf489-2622-4e3b-947b-8b3dc356fa8b",
+        "chatSessionId": "sess_f968a369-9ddd-47d6-afe1-3768e6905d10",
+        "timestamp": 1795019936277
+      }
+    ],
+    "11. App shell, robots, sitemap, error pages": [
+      {
+        "executionId": "20ab672a-2606-4e33-a551-d3c289b8aea3",
+        "chatSessionId": "sess_055d4a17-79f8-4110-9925-35551cc26c4c",
+        "timestamp": 1795020583194
+      },
+      {
+        "executionId": "20ab672a-2606-4e33-a551-d3c289b8aea3",
+        "chatSessionId": "sess_055d4a17-79f8-4110-9925-35551cc26c4c",
+        "timestamp": 1795024315959
+      }
+    ],
+    "12. Brand copy rules": [
+      {
+        "executionId": "065a46d8-f040-42d2-8de3-1d6decfa036d",
+        "chatSessionId": "sess_e3a8d021-75ae-4d36-8dd7-fe5ef78f0563",
+        "timestamp": 1795024388725
+      },
+      {
+        "executionId": "065a46d8-f040-42d2-8de3-1d6decfa036d",
+        "chatSessionId": "sess_e3a8d021-75ae-4d36-8dd7-fe5ef78f0563",
+        "timestamp": 1795024510459
+      },
+      {
+        "executionId": "11850cff-d679-447a-9f7a-a05c44bbe5e7",
+        "chatSessionId": "sess_852072b1-fc0c-455d-b9e1-48a1dc37c4b6",
+        "timestamp": 1795024519205
+      },
+      {
+        "executionId": "11850cff-d679-447a-9f7a-a05c44bbe5e7",
+        "chatSessionId": "sess_852072b1-fc0c-455d-b9e1-48a1dc37c4b6",
+        "timestamp": 1795025145269
+      }
+    ],
+    "13. Playwright and route-level axe": [
+      {
+        "executionId": "6992634b-371d-49e7-a87b-c32d31183be6",
+        "chatSessionId": "sess_cc678313-2c95-4689-9896-1701f04d54f7",
+        "timestamp": 1795025184230
+      },
+      {
+        "executionId": "6992634b-371d-49e7-a87b-c32d31183be6",
+        "chatSessionId": "sess_cc678313-2c95-4689-9896-1701f04d54f7",
+        "timestamp": 1795025423822
+      }
+    ],
+    "14. CI workflows": [
+      {
+        "executionId": "d2c2ad4e-f85c-452d-8d90-43ed4e0582c9",
+        "chatSessionId": "sess_6d404a4a-80a3-4c8d-8e4e-e8a630dc887d",
+        "timestamp": 1795025466321
+      },
+      {
+        "executionId": "d2c2ad4e-f85c-452d-8d90-43ed4e0582c9",
+        "chatSessionId": "sess_6d404a4a-80a3-4c8d-8e4e-e8a630dc887d",
+        "timestamp": 1795025714026
+      }
+    ],
+    "15. Definition of Done gate": [
+      {
+        "executionId": "d2c2ad4e-f85c-452d-8d90-43ed4e0582c9",
+        "chatSessionId": "sess_6d404a4a-80a3-4c8d-8e4e-e8a630dc887d",
+        "timestamp": 1795025719733
+      },
+      {
+        "executionId": "d2c2ad4e-f85c-452d-8d90-43ed4e0582c9",
+        "chatSessionId": "sess_6d404a4a-80a3-4c8d-8e4e-e8a630dc887d",
+        "timestamp": 1795025864174
+      }
+    ]
+  }
+}

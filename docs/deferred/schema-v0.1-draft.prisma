@@ -1,0 +1,613 @@
+// Ndalo Bloom schema v0.1 (DRAFT FOR REVIEW).
+// Money is stored as integer cents (ZAR). Order lines snapshot price/name/VAT.
+// No business logic is built on this until the schema is approved.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ───────────── Identity & customers ─────────────
+
+enum Role {
+  CUSTOMER
+  STAFF
+  ADMIN
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  emailVerified DateTime?
+  passwordHash  String?
+  role          Role      @default(CUSTOMER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  profile     CustomerProfile?
+  addresses   Address[]
+  orders      Order[]
+  carts       Cart[]
+  wishlist    WishlistItem[]
+  memberships Membership[]
+  consents    ConsentRecord[]
+  auditLogs   AuditLog[]
+  adminRoles  UserAdminRole[]
+}
+
+model CustomerProfile {
+  id        String    @id @default(cuid())
+  userId    String    @unique
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  firstName String
+  lastName  String
+  mobile    String? // E.164, e.g. +27821234567
+  birthday  DateTime?
+}
+
+model Address {
+  id         String  @id @default(cuid())
+  userId     String?
+  user       User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipient  String
+  phone      String
+  line1      String
+  line2      String?
+  suburb     String
+  city       String
+  province   String
+  postalCode String // 4-digit ZA
+  country    String  @default("ZA")
+  isDefault  Boolean @default(false)
+}
+
+model ConsentRecord {
+  id        String      @id @default(cuid())
+  userId    String?
+  user      User?       @relation(fields: [userId], references: [id])
+  email     String
+  type      ConsentType
+  granted   Boolean
+  source    String
+  createdAt DateTime    @default(now())
+
+  @@index([email, type])
+}
+
+enum ConsentType {
+  MARKETING_EMAIL
+  ANALYTICS
+  TERMS
+}
+
+// ───────────── Admin RBAC & audit ─────────────
+
+model AdminRole {
+  id          String          @id @default(cuid())
+  name        String          @unique
+  permissions Permission[]
+  users       UserAdminRole[]
+}
+
+model Permission {
+  id    String      @id @default(cuid())
+  key   String      @unique // e.g. "orders:refund"
+  roles AdminRole[]
+}
+
+model UserAdminRole {
+  userId String
+  roleId String
+  user   User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role   AdminRole @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actorId   String?
+  actor     User?    @relation(fields: [actorId], references: [id])
+  action    String
+  entity    String
+  entityId  String
+  diff      Json?
+  createdAt DateTime @default(now())
+
+  @@index([entity, entityId])
+}
+
+// ───────────── Catalogue ─────────────
+
+enum ProductStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
+
+model Category {
+  id       String    @id @default(cuid())
+  name     String
+  slug     String    @unique
+  products Product[]
+}
+
+model Collection {
+  id        String              @id @default(cuid())
+  name      String
+  slug      String              @unique
+  tagline   String?
+  story     String?
+  heroImage String?
+  sortOrder Int                 @default(0)
+  published Boolean             @default(false)
+  products  ProductCollection[]
+}
+
+model Product {
+  id             String                   @id @default(cuid())
+  name           String
+  slug           String                   @unique
+  shortDesc      String
+  description    String
+  story          String? // emotional story
+  categoryId     String?
+  category       Category?                @relation(fields: [categoryId], references: [id])
+  status         ProductStatus            @default(DRAFT)
+  featured       Boolean                  @default(false)
+  ingredients    String? // validated before launch
+  scentNotes     String?
+  directions     String?
+  safetyInfo     String?
+  warnings       String?
+  benefits       String? // only if substantiated
+  seoTitle       String?
+  seoDescription String?
+  searchVector   Unsupported("tsvector")?
+  createdAt      DateTime                 @default(now())
+  updatedAt      DateTime                 @updatedAt
+
+  variants     ProductVariant[]
+  images       ProductImage[]
+  collections  ProductCollection[]
+  attributes   ProductAttribute[]
+  related      RelatedProduct[]    @relation("from")
+  relatedFrom  RelatedProduct[]    @relation("to")
+  wishlist     WishlistItem[]
+  priceHistory PriceHistory[]
+
+  @@index([status, featured])
+}
+
+model ProductVariant {
+  id          String  @id @default(cuid())
+  productId   String
+  product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  sku         String  @unique
+  name        String // e.g. "250g"
+  priceCents  Int
+  saleCents   Int?
+  weightGrams Int?
+  lengthMm    Int?
+  widthMm     Int?
+  heightMm    Int?
+  active      Boolean @default(true)
+
+  stockOnHand  Int                @default(0)
+  lowStockAt   Int                @default(5)
+  reservations StockReservation[]
+  movements    StockMovement[]
+  cartItems    CartItem[]
+  orderItems   OrderItem[]
+}
+
+model ProductImage {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  alt       String
+  sortOrder Int     @default(0)
+}
+
+model ProductCollection {
+  productId    String
+  collectionId String
+  sortOrder    Int        @default(0)
+  product      Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+
+  @@id([productId, collectionId])
+}
+
+// Typed attributes drive Gift Finder rules and search (e.g. need=COMFORT, occasion=BIRTHDAY, scent=Rose Geranium).
+model ProductAttribute {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  key       String
+  value     String
+
+  @@index([key, value])
+}
+
+model RelatedProduct {
+  fromId String
+  toId   String
+  from   Product @relation("from", fields: [fromId], references: [id], onDelete: Cascade)
+  to     Product @relation("to", fields: [toId], references: [id], onDelete: Cascade)
+
+  @@id([fromId, toId])
+}
+
+model PriceHistory {
+  id         String   @id @default(cuid())
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  variantSku String
+  priceCents Int
+  changedBy  String?
+  createdAt  DateTime @default(now())
+}
+
+// ───────────── Inventory ─────────────
+
+enum ReservationStatus {
+  ACTIVE
+  CONSUMED
+  RELEASED
+  EXPIRED
+}
+
+model StockReservation {
+  id        String            @id @default(cuid())
+  variantId String
+  variant   ProductVariant    @relation(fields: [variantId], references: [id])
+  orderId   String?
+  order     Order?            @relation(fields: [orderId], references: [id])
+  quantity  Int
+  status    ReservationStatus @default(ACTIVE)
+  expiresAt DateTime
+  createdAt DateTime          @default(now())
+
+  @@index([variantId, status])
+}
+
+model StockMovement {
+  id        String         @id @default(cuid())
+  variantId String
+  variant   ProductVariant @relation(fields: [variantId], references: [id])
+  delta     Int
+  reason    String // RESTOCK, SALE, ADJUSTMENT, REFUND
+  note      String?
+  actorId   String?
+  createdAt DateTime       @default(now())
+}
+
+// ───────────── Cart ─────────────
+
+model Cart {
+  id           String     @id @default(cuid())
+  userId       String?
+  user         User?      @relation(fields: [userId], references: [id])
+  token        String     @unique // guest cart cookie
+  discountCode String?
+  items        CartItem[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model CartItem {
+  id            String         @id @default(cuid())
+  cartId        String
+  cart          Cart           @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  variantId     String
+  variant       ProductVariant @relation(fields: [variantId], references: [id])
+  quantity      Int
+  giftMessageId String?        @unique
+  giftMessage   GiftMessage?   @relation(fields: [giftMessageId], references: [id])
+
+  @@unique([cartId, variantId])
+}
+
+// ───────────── Orders & payments ─────────────
+
+enum OrderStatus {
+  PENDING_PAYMENT
+  PAID
+  PROCESSING
+  DISPATCHED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+model Order {
+  id            String      @id @default(cuid())
+  number        String      @unique
+  userId        String?
+  user          User?       @relation(fields: [userId], references: [id])
+  email         String
+  mobile        String
+  status        OrderStatus @default(PENDING_PAYMENT)
+  subtotalCents Int
+  discountCents Int         @default(0)
+  shippingCents Int
+  vatCents      Int         @default(0) // 0 until VAT registration confirmed
+  totalCents    Int
+  currency      String      @default("ZAR")
+  shippingAddr  Json
+  discountCode  String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  items         OrderItem[]
+  payments      Payment[]
+  shipments     Shipment[]
+  reservations  StockReservation[]
+  usages        DiscountUsage[]
+  giftRecipient GiftRecipient?
+}
+
+model OrderItem {
+  id          String         @id @default(cuid())
+  orderId     String
+  order       Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  variantId   String
+  variant     ProductVariant @relation(fields: [variantId], references: [id])
+  nameSnap    String
+  skuSnap     String
+  unitCents   Int
+  quantity    Int
+  giftMessage String?
+}
+
+enum PaymentStatus {
+  INITIATED
+  PENDING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+}
+
+model Payment {
+  id          String        @id @default(cuid())
+  orderId     String
+  order       Order         @relation(fields: [orderId], references: [id])
+  provider    String // "bobpay"
+  providerRef String?       @unique
+  status      PaymentStatus @default(INITIATED)
+  amountCents Int
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  events  PaymentEvent[]
+  refunds Refund[]
+}
+
+// Unique provider event id => webhook idempotency.
+model PaymentEvent {
+  id              String   @id @default(cuid())
+  paymentId       String?
+  payment         Payment? @relation(fields: [paymentId], references: [id])
+  provider        String
+  providerEventId String
+  payload         Json
+  receivedAt      DateTime @default(now())
+
+  @@unique([provider, providerEventId])
+}
+
+model Refund {
+  id          String   @id @default(cuid())
+  paymentId   String
+  payment     Payment  @relation(fields: [paymentId], references: [id])
+  amountCents Int
+  reason      String?
+  providerRef String?
+  createdAt   DateTime @default(now())
+}
+
+// ───────────── Promotions ─────────────
+
+enum DiscountType {
+  PERCENT
+  FIXED
+}
+
+model Discount {
+  id            String          @id @default(cuid())
+  code          String          @unique
+  type          DiscountType
+  value         Int // percent (0-100) or cents
+  minOrderCents Int             @default(0)
+  startsAt      DateTime?
+  expiresAt     DateTime?
+  usageLimit    Int?
+  productIds    String[]
+  active        Boolean         @default(true)
+  usages        DiscountUsage[]
+}
+
+model DiscountUsage {
+  id         String   @id @default(cuid())
+  discountId String
+  discount   Discount @relation(fields: [discountId], references: [id])
+  orderId    String
+  order      Order    @relation(fields: [orderId], references: [id])
+  createdAt  DateTime @default(now())
+
+  @@unique([discountId, orderId])
+}
+
+// ───────────── Shipping ─────────────
+
+model ShippingMethod {
+  id            String  @id @default(cuid())
+  name          String
+  provider      String  @default("manual") // later: "bobgo"
+  priceCents    Int // admin-configured, never hardcoded
+  freeOverCents Int?
+  etaDays       String?
+  active        Boolean @default(true)
+}
+
+model Shipment {
+  id         String          @id @default(cuid())
+  orderId    String
+  order      Order           @relation(fields: [orderId], references: [id])
+  carrier    String?
+  trackingNo String?
+  status     String          @default("PENDING")
+  events     TrackingEvent[]
+  createdAt  DateTime        @default(now())
+}
+
+model TrackingEvent {
+  id         String   @id @default(cuid())
+  shipmentId String
+  shipment   Shipment @relation(fields: [shipmentId], references: [id], onDelete: Cascade)
+  status     String
+  note       String?
+  occurredAt DateTime
+}
+
+// ───────────── Gifting ─────────────
+
+model GiftMessage {
+  id         String    @id @default(cuid())
+  body       String
+  approved   Boolean   @default(false) // customer must approve (incl. AI-assisted)
+  aiAssisted Boolean   @default(false)
+  cartItem   CartItem?
+}
+
+model GiftRecipient {
+  id      String  @id @default(cuid())
+  orderId String  @unique
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  name    String
+  email   String?
+  phone   String?
+}
+
+model GiftFinderSession {
+  id              String               @id @default(cuid())
+  answers         Json // forWhom, need, occasion, budget
+  completed       Boolean              @default(false)
+  createdAt       DateTime             @default(now())
+  recommendations GiftRecommendation[]
+}
+
+model GiftRecommendation {
+  id        String            @id @default(cuid())
+  sessionId String
+  session   GiftFinderSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  productId String
+  reason    String
+  score     Int
+}
+
+// Configurable budget bands, options and rule weights.
+model GiftFinderOption {
+  id        String @id @default(cuid())
+  step      String // FOR_WHOM | NEED | OCCASION
+  value     String
+  label     String
+  sortOrder Int    @default(0)
+}
+
+model BudgetRange {
+  id        String @id @default(cuid())
+  label     String
+  minCents  Int
+  maxCents  Int?
+  sortOrder Int    @default(0)
+}
+
+// ───────────── Membership (foundation only, no billing in MVP) ─────────────
+
+model MembershipTier {
+  id       String              @id @default(cuid())
+  name     String              @unique
+  benefits MembershipBenefit[]
+  members  Membership[]
+}
+
+model MembershipBenefit {
+  id     String         @id @default(cuid())
+  tierId String
+  tier   MembershipTier @relation(fields: [tierId], references: [id])
+  label  String
+}
+
+model Membership {
+  id       String              @id @default(cuid())
+  userId   String
+  user     User                @relation(fields: [userId], references: [id])
+  tierId   String
+  tier     MembershipTier      @relation(fields: [tierId], references: [id])
+  joinedAt DateTime            @default(now())
+  rewards  RewardTransaction[]
+}
+
+model RewardTransaction {
+  id           String     @id @default(cuid())
+  membershipId String
+  membership   Membership @relation(fields: [membershipId], references: [id])
+  points       Int
+  reason       String
+  createdAt    DateTime   @default(now())
+}
+
+model WishlistItem {
+  userId    String
+  productId String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([userId, productId])
+}
+
+// ───────────── Content ─────────────
+
+model ArticleCategory {
+  id       String    @id @default(cuid())
+  name     String
+  slug     String    @unique
+  articles Article[]
+}
+
+model Article {
+  id             String           @id @default(cuid())
+  title          String
+  slug           String           @unique
+  body           String
+  excerpt        String?
+  featuredImg    String?
+  categoryId     String?
+  category       ArticleCategory? @relation(fields: [categoryId], references: [id])
+  publishAt      DateTime? // scheduling; null = unpublished
+  seoTitle       String?
+  seoDescription String?
+  isSoftSunday   Boolean          @default(false)
+  createdAt      DateTime         @default(now())
+}
+
+model NewsletterSubscription {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  confirmed Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model PageContent {
+  id    String @id @default(cuid())
+  key   String @unique // e.g. "about", "shipping"
+  title String
+  body  String
+}

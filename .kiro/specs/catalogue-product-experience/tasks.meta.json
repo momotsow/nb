@@ -1,0 +1,192 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1. Reconcile Prisma schema": [
+      {
+        "executionId": "5a7d4075-1b8a-49a1-a3f3-0c2dab185b75",
+        "chatSessionId": "sess_ffe29318-3167-41e8-b8b2-34c6b93d0001",
+        "timestamp": 1795156717863
+      },
+      {
+        "executionId": "5a7d4075-1b8a-49a1-a3f3-0c2dab185b75",
+        "chatSessionId": "sess_ffe29318-3167-41e8-b8b2-34c6b93d0001",
+        "timestamp": 1795156866885
+      }
+    ],
+    "2. Migration `catalogue_init`": [
+      {
+        "executionId": "03b4dc9c-a5a2-40ec-a1aa-1349062fd38d",
+        "chatSessionId": "sess_a334fce1-7469-445e-9f1e-727b2c77554d",
+        "timestamp": 1795156906085
+      }
+    ],
+    "3. `db:verify` script": [
+      {
+        "executionId": "8470772b-8331-478d-8aab-0cc4aaf85fba",
+        "chatSessionId": "sess_5dca9467-45db-4988-8a38-3a8e1ad0ad2f",
+        "timestamp": 1795350114575
+      },
+      {
+        "executionId": "8470772b-8331-478d-8aab-0cc4aaf85fba",
+        "chatSessionId": "sess_5dca9467-45db-4988-8a38-3a8e1ad0ad2f",
+        "timestamp": 1795350239713
+      }
+    ],
+    "4. Domain catalogue rules": [
+      {
+        "executionId": "04ca91b2-2485-464c-9930-588f9aeabd54",
+        "chatSessionId": "sess_2dda7ed3-cf9b-4ae8-9705-d2b7a24989d7",
+        "timestamp": 1795350287234
+      },
+      {
+        "executionId": "04ca91b2-2485-464c-9930-588f9aeabd54",
+        "chatSessionId": "sess_2dda7ed3-cf9b-4ae8-9705-d2b7a24989d7",
+        "timestamp": 1795350391775
+      }
+    ],
+    "5. Availability boundary": [
+      {
+        "executionId": "cf5d31a0-cbba-4eb8-a968-281409e07e70",
+        "chatSessionId": "sess_4c779580-4d3d-44ba-a13c-82ea7cfa8d87",
+        "timestamp": 1795350414867
+      },
+      {
+        "executionId": "cf5d31a0-cbba-4eb8-a968-281409e07e70",
+        "chatSessionId": "sess_4c779580-4d3d-44ba-a13c-82ea7cfa8d87",
+        "timestamp": 1795350513866
+      }
+    ],
+    "6. Data layer": [
+      {
+        "executionId": "b257a520-c178-4da6-a9ce-74f1522d6a80",
+        "chatSessionId": "sess_0b646db7-f2a3-45aa-bc32-5edb270be2bd",
+        "timestamp": 1795350552904
+      },
+      {
+        "executionId": "b257a520-c178-4da6-a9ce-74f1522d6a80",
+        "chatSessionId": "sess_0b646db7-f2a3-45aa-bc32-5edb270be2bd",
+        "timestamp": 1795351003824
+      }
+    ],
+    "7. Application service and read models": [
+      {
+        "executionId": "998ee18b-af06-48bf-a3cc-fd086c4c0250",
+        "chatSessionId": "sess_4d825fea-71e0-473e-9e05-75fa120a8b1a",
+        "timestamp": 1795351028095
+      },
+      {
+        "executionId": "998ee18b-af06-48bf-a3cc-fd086c4c0250",
+        "chatSessionId": "sess_4d825fea-71e0-473e-9e05-75fa120a8b1a",
+        "timestamp": 1795351224720
+      }
+    ],
+    "8. Query parsing and rate limit hook": [
+      {
+        "executionId": "cef638e3-cfc0-463d-95d6-1461732c76f2",
+        "chatSessionId": "sess_5d8ed7d0-ebda-4e8c-9b62-f0cfd37a7710",
+        "timestamp": 1795351255954
+      },
+      {
+        "executionId": "cef638e3-cfc0-463d-95d6-1461732c76f2",
+        "chatSessionId": "sess_5d8ed7d0-ebda-4e8c-9b62-f0cfd37a7710",
+        "timestamp": 1795351357514
+      }
+    ],
+    "9. Seed data": [
+      {
+        "executionId": "b3a69aa7-79c8-4a0c-beff-b7b0c34580b7",
+        "chatSessionId": "sess_e2cdc9a8-6fb7-4209-9c30-bfe42d4c5f43",
+        "timestamp": 1795351403061
+      },
+      {
+        "executionId": "b3a69aa7-79c8-4a0c-beff-b7b0c34580b7",
+        "chatSessionId": "sess_e2cdc9a8-6fb7-4209-9c30-bfe42d4c5f43",
+        "timestamp": 1795351545421
+      }
+    ],
+    "10. UI components with stories and tests": [
+      {
+        "executionId": "353b5afe-52e0-4334-b3ad-714c1de26b67",
+        "chatSessionId": "sess_b345fc11-459a-472c-85c7-1784b0e78527",
+        "timestamp": 1795351567619
+      },
+      {
+        "executionId": "353b5afe-52e0-4334-b3ad-714c1de26b67",
+        "chatSessionId": "sess_b345fc11-459a-472c-85c7-1784b0e78527",
+        "timestamp": 1795351886889
+      }
+    ],
+    "11. Routes: shop, collection, category, product": [
+      {
+        "executionId": "66ff7b04-0f69-481e-a7ef-97a233ca8820",
+        "chatSessionId": "sess_6daaee18-76bb-4387-acdc-f2da63f09e93",
+        "timestamp": 1795351930245
+      },
+      {
+        "executionId": "66ff7b04-0f69-481e-a7ef-97a233ca8820",
+        "chatSessionId": "sess_6daaee18-76bb-4387-acdc-f2da63f09e93",
+        "timestamp": 1795352394850
+      }
+    ],
+    "12. Search route": [
+      {
+        "executionId": "b60ff536-15a1-4041-b4ad-4012562078ca",
+        "chatSessionId": "sess_33523d95-f132-44f6-94ce-7828cff67a79",
+        "timestamp": 1795352460870
+      },
+      {
+        "executionId": "b60ff536-15a1-4041-b4ad-4012562078ca",
+        "chatSessionId": "sess_33523d95-f132-44f6-94ce-7828cff67a79",
+        "timestamp": 1795352655164
+      }
+    ],
+    "13. SEO": [
+      {
+        "executionId": "7b894d95-2580-4723-aeb5-1554e9362c3e",
+        "chatSessionId": "sess_ff4bcd88-a5af-43fc-a07d-69e7c726a133",
+        "timestamp": 1795352676183
+      },
+      {
+        "executionId": "7b894d95-2580-4723-aeb5-1554e9362c3e",
+        "chatSessionId": "sess_ff4bcd88-a5af-43fc-a07d-69e7c726a133",
+        "timestamp": 1795353043735
+      }
+    ],
+    "14. Analytics events": [
+      {
+        "executionId": "9ef47256-851a-4484-bdfc-fd96637e0db2",
+        "chatSessionId": "sess_ba38992b-2d11-4b31-8f95-bc92a34edf30",
+        "timestamp": 1795353136006
+      },
+      {
+        "executionId": "9ef47256-851a-4484-bdfc-fd96637e0db2",
+        "chatSessionId": "sess_ba38992b-2d11-4b31-8f95-bc92a34edf30",
+        "timestamp": 1795353362616
+      }
+    ],
+    "15. Brand copy checks": [
+      {
+        "executionId": "5c07af54-e791-45b3-9fe3-88aad2ba94c1",
+        "chatSessionId": "sess_6860af3d-f696-4e78-8e2b-7e5478b052ad",
+        "timestamp": 1795353434317
+      },
+      {
+        "executionId": "5c07af54-e791-45b3-9fe3-88aad2ba94c1",
+        "chatSessionId": "sess_6860af3d-f696-4e78-8e2b-7e5478b052ad",
+        "timestamp": 1795353482424
+      }
+    ],
+    "16. E2E and architecture tests": [
+      {
+        "executionId": "b9b158d6-2ea6-421c-b068-f5529ffbc5d0",
+        "chatSessionId": "sess_d98bc281-fc82-4d1b-9ca0-fb4e42112a52",
+        "timestamp": 1795353675771
+      },
+      {
+        "executionId": "b9b158d6-2ea6-421c-b068-f5529ffbc5d0",
+        "chatSessionId": "sess_d98bc281-fc82-4d1b-9ca0-fb4e42112a52",
+        "timestamp": 1795353940324
+      }
+    ]
+  }
+}

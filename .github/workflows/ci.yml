@@ -1,0 +1,113 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: "24"
+
+jobs:
+  secret-scan:
+    name: secret-scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: gitleaks/gitleaks-action@v2.3.9
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  quality-gates:
+    name: quality-gates
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4.4.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run db:generate
+        env:
+          DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+      - run: npm run format:check
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - run: npm run storybook:build
+      # R2.5: dependency audit
+      - run: npm audit --audit-level=high
+
+  db-verification:
+    name: db-verification
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: ci
+          POSTGRES_PASSWORD: ci
+          POSTGRES_DB: ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ci"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+      # Opt-in for data-layer integration tests (skipped when unset).
+      TEST_DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          persist-credentials: false
+      - name: Detect Prisma migrations
+        id: detect
+        run: |
+          if [ -d prisma/migrations ] && [ -n "$(ls -A prisma/migrations)" ]; then
+            echo "has_migrations=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_migrations=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::No prisma/migrations yet (Spec 2 adds the schema). Skipping DB steps."
+          fi
+      - if: steps.detect.outputs.has_migrations == 'true'
+        uses: actions/setup-node@v4.4.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - if: steps.detect.outputs.has_migrations == 'true'
+        run: npm ci
+      - if: steps.detect.outputs.has_migrations == 'true'
+        run: npx prisma migrate deploy
+      - name: Seed
+        if: steps.detect.outputs.has_migrations == 'true'
+        run: npx prisma db seed
+      - if: steps.detect.outputs.has_migrations == 'true'
+        run: npm run db:verify
+      - name: Integration tests
+        if: steps.detect.outputs.has_migrations == 'true'
+        run: npm test
+      - name: Install Playwright browsers
+        if: steps.detect.outputs.has_migrations == 'true'
+        run: npx playwright install --with-deps chromium
+      - if: steps.detect.outputs.has_migrations == 'true'
+        run: npm run test:e2e
