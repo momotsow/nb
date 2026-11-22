@@ -6,21 +6,53 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "vitest --run",
+    "typecheck": "next typegen && tsc --noEmit",
+    "format:check": "prettier --check .",
+    "test:e2e": "playwright test",
+    "storybook:build": "storybook build",
+    "db:generate": "prisma generate",
+    "db:verify": "node scripts/db-verify.ts",
+    "db:seed": "node prisma/seed.ts"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "7.10.1",
+    "@prisma/client": "7.10.1",
     "next": "16.4.6",
+    "pg": "8.16.3",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "zod": "4.6.7"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
+    "@playwright/test": "1.65.1",
+    "@storybook/addon-a11y": "10.6.7",
+    "@storybook/addon-docs": "10.6.7",
+    "@storybook/react-vite": "10.6.7",
     "@tailwindcss/turbopack": "4.3.3",
-    "@types/node": "^20",
+    "@tailwindcss/vite": "4.3.3",
+    "@testing-library/dom": "10.4.2",
+    "@testing-library/react": "16.3.3",
+    "@testing-library/user-event": "14.6.12",
+    "@types/node": "24.19.2",
+    "@types/pg": "8.15.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv": "18.0.10",
     "eslint": "^9",
     "eslint-config-next": "16.4.6",
+    "jsdom": "31.0.1",
+    "prettier": "3.10.1",
+    "prisma": "7.10.1",
+    "storybook": "10.6.7",
     "tailwindcss": "4.3.3",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "5.1.1",
+    "vitest-axe": "0.1.0"
+  },
+  "overrides": {
+    "effect": "3.22.5"
   }
 }

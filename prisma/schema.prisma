@@ -1,0 +1,125 @@
+// Ndalo Bloom schema: catalogue only (Spec 2).
+// Money is stored as integer cents (ZAR).
+// The full v0.1 draft is archived at docs/deferred/schema-v0.1-draft.prisma;
+// other domains return in their own specs.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ProductStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
+
+model Category {
+  id       String    @id @default(cuid())
+  name     String
+  slug     String    @unique
+  products Product[]
+}
+
+model Collection {
+  id        String              @id @default(cuid())
+  name      String
+  slug      String              @unique
+  tagline   String?
+  story     String?
+  mediaRef  String? // opaque reference resolved by MediaProvider
+  sortOrder Int                 @default(0)
+  published Boolean             @default(false)
+  products  ProductCollection[]
+}
+
+model Product {
+  id             String                   @id @default(cuid())
+  name           String
+  slug           String                   @unique
+  shortDesc      String
+  description    String
+  story          String? // emotional story
+  categoryId     String?
+  category       Category?                @relation(fields: [categoryId], references: [id])
+  status         ProductStatus            @default(DRAFT)
+  featured       Boolean                  @default(false)
+  ingredients    String? // validated before launch
+  scentNotes     String?
+  directions     String?
+  safetyInfo     String?
+  warnings       String?
+  benefits       String? // only if substantiated
+  seoTitle       String?
+  seoDescription String?
+  searchVector   Unsupported("tsvector")?
+  createdAt      DateTime                 @default(now())
+  updatedAt      DateTime                 @updatedAt
+
+  variants    ProductVariant[]
+  images      ProductImage[]
+  collections ProductCollection[]
+  attributes  ProductAttribute[]
+  related     RelatedProduct[]    @relation("from")
+  relatedFrom RelatedProduct[]    @relation("to")
+
+  @@index([status, featured])
+}
+
+model ProductVariant {
+  id          String  @id @default(cuid())
+  productId   String
+  product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  sku         String  @unique
+  name        String // e.g. "250g"
+  priceCents  Int
+  stockKey    String  @unique // opaque external stock reference
+  weightGrams Int?
+  lengthMm    Int?
+  widthMm     Int?
+  heightMm    Int?
+  active      Boolean @default(true)
+}
+
+model ProductImage {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  mediaRef  String // opaque reference resolved by MediaProvider
+  alt       String
+  sortOrder Int     @default(0)
+}
+
+model ProductCollection {
+  productId    String
+  collectionId String
+  sortOrder    Int        @default(0)
+  product      Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+
+  @@id([productId, collectionId])
+}
+
+// Typed attributes (e.g. need=COMFORT, occasion=BIRTHDAY, scent=Rose Geranium).
+model ProductAttribute {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  key       String
+  value     String
+
+  @@index([key, value])
+}
+
+model RelatedProduct {
+  fromId String
+  toId   String
+  from   Product @relation("from", fields: [fromId], references: [id], onDelete: Cascade)
+  to     Product @relation("to", fields: [toId], references: [id], onDelete: Cascade)
+
+  @@id([fromId, toId])
+}

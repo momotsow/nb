@@ -1,0 +1,217 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`catalogue metadata snapshots > category 1`] = `
+{
+  "alternates": {
+    "canonical": "https://example.test/categories/candles?page=2",
+  },
+  "description": "Shop Candles from Ndalo Bloom, with clear prices and availability.",
+  "openGraph": {
+    "description": "Shop Candles from Ndalo Bloom, with clear prices and availability.",
+    "images": [
+      {
+        "alt": "Alpha jar",
+        "url": "/seed/alpha.svg",
+      },
+    ],
+    "locale": "en_ZA",
+    "siteName": "Ndalo Bloom",
+    "title": "Candles (page 2)",
+    "type": "website",
+    "url": "https://example.test/categories/candles?page=2",
+  },
+  "title": "Candles (page 2)",
+  "twitter": {
+    "card": "summary_large_image",
+    "description": "Shop Candles from Ndalo Bloom, with clear prices and availability.",
+    "images": [
+      {
+        "alt": "Alpha jar",
+        "url": "/seed/alpha.svg",
+      },
+    ],
+    "title": "Candles (page 2)",
+  },
+}
+`;
+
+exports[`catalogue metadata snapshots > collection 1`] = `
+{
+  "alternates": {
+    "canonical": "https://example.test/collections/calm",
+  },
+  "description": "Slow down.",
+  "openGraph": {
+    "description": "Slow down.",
+    "images": [
+      {
+        "alt": "Alpha jar",
+        "url": "/seed/alpha.svg",
+      },
+    ],
+    "locale": "en_ZA",
+    "siteName": "Ndalo Bloom",
+    "title": "Calm",
+    "type": "website",
+    "url": "https://example.test/collections/calm",
+  },
+  "title": "Calm",
+  "twitter": {
+    "card": "summary_large_image",
+    "description": "Slow down.",
+    "images": [
+      {
+        "alt": "Alpha jar",
+        "url": "/seed/alpha.svg",
+      },
+    ],
+    "title": "Calm",
+  },
+}
+`;
+
+exports[`catalogue metadata snapshots > product prefers SEO fields and falls back to short description 1`] = `
+{
+  "alternates": {
+    "canonical": "https://example.test/products/alpha",
+  },
+  "description": "A calming candle.",
+  "openGraph": {
+    "description": "A calming candle.",
+    "images": [
+      {
+        "alt": "Alpha jar",
+        "url": "/seed/alpha.svg",
+      },
+    ],
+    "locale": "en_ZA",
+    "siteName": "Ndalo Bloom",
+    "title": "Alpha </script>",
+    "type": "website",
+    "url": "https://example.test/products/alpha",
+  },
+  "title": "Alpha </script>",
+  "twitter": {
+    "card": "summary_large_image",
+    "description": "A calming candle.",
+    "images": [
+      {
+        "alt": "Alpha jar",
+        "url": "/seed/alpha.svg",
+      },
+    ],
+    "title": "Alpha </script>",
+  },
+}
+`;
+
+exports[`catalogue metadata snapshots > search is noindex 1`] = `
+{
+  "alternates": {
+    "canonical": "https://example.test/search",
+  },
+  "description": "Search Ndalo Bloom products by name, description or scent notes.",
+  "openGraph": {
+    "description": "Search Ndalo Bloom products by name, description or scent notes.",
+    "locale": "en_ZA",
+    "siteName": "Ndalo Bloom",
+    "title": "Search",
+    "type": "website",
+    "url": "https://example.test/search",
+  },
+  "robots": {
+    "follow": true,
+    "index": false,
+  },
+  "title": "Search",
+  "twitter": {
+    "card": "summary",
+    "description": "Search Ndalo Bloom products by name, description or scent notes.",
+    "title": "Search",
+  },
+}
+`;
+
+exports[`catalogue metadata snapshots > shop 1`] = `
+{
+  "alternates": {
+    "canonical": "https://example.test/shop",
+  },
+  "description": "Browse Ndalo Bloom self-care products and gifts, with clear prices and availability.",
+  "openGraph": {
+    "description": "Browse Ndalo Bloom self-care products and gifts, with clear prices and availability.",
+    "locale": "en_ZA",
+    "siteName": "Ndalo Bloom",
+    "title": "Shop",
+    "type": "website",
+    "url": "https://example.test/shop",
+  },
+  "title": "Shop",
+  "twitter": {
+    "card": "summary",
+    "description": "Browse Ndalo Bloom self-care products and gifts, with clear prices and availability.",
+    "title": "Shop",
+  },
+}
+`;
+
+exports[`catalogue metadata snapshots > shop 2`] = `
+{
+  "alternates": {
+    "canonical": "https://example.test/shop?page=2",
+  },
+  "description": "Browse Ndalo Bloom self-care products and gifts, with clear prices and availability.",
+  "openGraph": {
+    "description": "Browse Ndalo Bloom self-care products and gifts, with clear prices and availability.",
+    "locale": "en_ZA",
+    "siteName": "Ndalo Bloom",
+    "title": "Shop (page 2)",
+    "type": "website",
+    "url": "https://example.test/shop?page=2",
+  },
+  "title": "Shop (page 2)",
+  "twitter": {
+    "card": "summary",
+    "description": "Browse Ndalo Bloom self-care products and gifts, with clear prices and availability.",
+    "title": "Shop (page 2)",
+  },
+}
+`;
+
+exports[`productJsonLd > matches the snapshot 1`] = `
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "brand": {
+    "@type": "Brand",
+    "name": "Ndalo Bloom",
+  },
+  "category": "Candles",
+  "description": "A calming candle.",
+  "image": [
+    "https://example.test/seed/alpha.svg",
+  ],
+  "name": "Alpha </script>",
+  "offers": [
+    {
+      "@type": "Offer",
+      "availability": "https://schema.org/InStock",
+      "name": "200g",
+      "price": "129.50",
+      "priceCurrency": "ZAR",
+      "sku": "SEED-A-1",
+      "url": "https://example.test/products/alpha",
+    },
+    {
+      "@type": "Offer",
+      "availability": "https://schema.org/OutOfStock",
+      "name": "400g",
+      "price": "200.00",
+      "priceCurrency": "ZAR",
+      "sku": "SEED-A-2",
+      "url": "https://example.test/products/alpha",
+    },
+  ],
+  "url": "https://example.test/products/alpha",
+}
+`;
