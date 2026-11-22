@@ -58,6 +58,13 @@ jobs:
     name: db-verification
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    # Serialise runs that may write to the shared Neon dev DB (seed is an idempotent upsert;
+    # integration tests clean up their own prefixed rows). Never cancel mid-migration.
+    concurrency:
+      group: db-verification-shared-db
+      cancel-in-progress: false
+    # The local Postgres service stays the default. When the Neon secrets exist (not on fork
+    # PRs, where secrets are withheld) the job uses the Neon dev database instead.
     services:
       postgres:
         image: postgres:16
@@ -73,9 +80,14 @@ jobs:
           --health-timeout 5s
           --health-retries 10
     env:
-      DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+      # Non-production so the seed and the stub availability provider are enabled.
+      APP_ENV: ci
+      # Direct (non-pooled) URL: required for prisma migrate deploy; also used by seed/verify.
+      DATABASE_URL: ${{ secrets.NEON_DIRECT_URL || 'postgresql://ci:ci@localhost:5432/ci' }}
+      # Pooled URL, used by the app under e2e. Falls back to the local service.
+      APP_DATABASE_URL: ${{ secrets.NEON_DATABASE_URL || 'postgresql://ci:ci@localhost:5432/ci' }}
       # Opt-in for data-layer integration tests (skipped when unset).
-      TEST_DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+      TEST_DATABASE_URL: ${{ secrets.NEON_DIRECT_URL || 'postgresql://ci:ci@localhost:5432/ci' }}
     steps:
       - uses: actions/checkout@v4.2.2
         with:
@@ -111,3 +123,5 @@ jobs:
         run: npx playwright install --with-deps chromium
       - if: steps.detect.outputs.has_migrations == 'true'
         run: npm run test:e2e
+        env:
+          DATABASE_URL: ${{ env.APP_DATABASE_URL }}
